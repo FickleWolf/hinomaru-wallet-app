@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
 
-import type { IWalletConnectHandlers } from "@/application/ports/IWalletConnectHandlers";
+import type { WalletConnectHandlers } from "@/application/ports/WalletConnectHandlers";
 import { WalletConnectClient } from "@/infrastructure/clients/WalletConnectClient";
 
 import { useWcAuthorizeTransfer } from "../hooks/walletConnect/useWcAuthorizeTransfer";
@@ -35,7 +35,7 @@ export const WalletConnectProvider = ({ children }: PropsWithChildren) => {
   const getAccount = useWcGetAccount();
   const authorizeTransfer = useWcAuthorizeTransfer();
 
-  const handlers: IWalletConnectHandlers = useMemo(
+  const handlers: WalletConnectHandlers = useMemo(
     () => ({
       onSessionProposal: sessionProposal.onSessionProposal,
       onSessionDelete: sessionDelete.onSessionDelete,
@@ -52,7 +52,7 @@ export const WalletConnectProvider = ({ children }: PropsWithChildren) => {
     ]
   );
 
-  const handlersRef = useRef<IWalletConnectHandlers>(handlers);
+  const handlersRef = useRef<WalletConnectHandlers>(handlers);
   useEffect(() => {
     handlersRef.current = handlers;
   }, [handlers]);

@@ -1,10 +1,10 @@
 import { useCallback, useState } from "react";
 
 import type {
-  IWalletConnectHandlers,
+  WalletConnectHandlers,
   ShackwAuthorizeTransferParams,
   ShackwAuthorizeTransferResult
-} from "@/application/ports/IWalletConnectHandlers";
+} from "@/application/ports/WalletConnectHandlers";
 
 type PendingAuthorizeTransfer = {
   params: ShackwAuthorizeTransferParams;
@@ -14,7 +14,7 @@ type PendingAuthorizeTransfer = {
 export const useWcAuthorizeTransfer = () => {
   const [pendingTransfer, setPendingTransfer] = useState<PendingAuthorizeTransfer | null>(null);
 
-  const onAuthorizeTransfer = useCallback<IWalletConnectHandlers["onAuthorizeTransfer"]>(async params => {
+  const onAuthorizeTransfer = useCallback<WalletConnectHandlers["onAuthorizeTransfer"]>(async params => {
     console.log("[WalletConnect] shackw_authorizeTransfer:", params);
 
     return {

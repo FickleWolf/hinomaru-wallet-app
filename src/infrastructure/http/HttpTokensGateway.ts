@@ -1,20 +1,17 @@
 import * as v from "valibot";
 
-import type { ITokensGateway, TransferTokenQuery, TransferTokenResult } from "@/application/ports/ITokensGateway";
+import type { TokensGateway, TransferTokenQuery, TransferTokenResult } from "@/application/ports/TokensGateway";
 import type { HttpClient } from "@/infrastructure/clients/HttpClient";
 import { TransferTokenResultSchema } from "@/shared/validations/schemas/HttpTokenResultSchema";
 
-export class HttpTokensGateway implements ITokensGateway {
-  private path = "/tokens";
-  private client: HttpClient;
+export class HttpTokensGateway implements TokensGateway {
+  private readonly path = "/tokens";
 
-  constructor(client: HttpClient) {
-    this.client = client;
-  }
+  constructor(private readonly client: HttpClient) {}
 
-  async transfer(query: TransferTokenQuery): Promise<TransferTokenResult> {
-    const transfered = await this.client.post(`${this.path}:transfer`, query);
-    const parsed = v.parse(TransferTokenResultSchema, transfered);
-    return parsed;
+  async transfer(query: TransferTokenQuery): Promise<TransferTokenResult["data"]> {
+    const res = await this.client.post(`${this.path}:transfer`, query);
+    const parsed = v.parse(TransferTokenResultSchema, res);
+    return parsed.data;
   }
 }

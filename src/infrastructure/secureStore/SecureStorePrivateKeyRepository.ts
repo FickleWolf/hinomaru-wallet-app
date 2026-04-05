@@ -1,6 +1,6 @@
 import * as SecureStore from "expo-secure-store";
 
-import type { IPrivateKeyRepository, PrivateKeyResult } from "@/application/ports/IPrivateKeyRepository";
+import type { PrivateKeyRepository, PrivateKeyResult } from "@/application/ports/PrivateKeyRepository";
 import { ENV } from "@/config/env";
 import { CustomError } from "@/shared/exceptions";
 
@@ -8,15 +8,15 @@ import type { Address, Hex } from "viem";
 
 const STORAGE_KEY = ENV.SECURESTORE_WALLET_KEY;
 
-export class SecureStorePrivateKeyRepository implements IPrivateKeyRepository {
-  private static instance: IPrivateKeyRepository | null = null;
-  private static ready: Promise<IPrivateKeyRepository> | null = null;
+export class SecureStorePrivateKeyRepository implements PrivateKeyRepository {
+  private static instance: PrivateKeyRepository | null = null;
+  private static ready: Promise<PrivateKeyRepository> | null = null;
 
   private items: PrivateKeyResult[] = [];
 
   private constructor() {}
 
-  static async getInstance(): Promise<IPrivateKeyRepository> {
+  static async getInstance(): Promise<PrivateKeyRepository> {
     if (this.instance) return this.instance;
 
     if (!this.ready) {

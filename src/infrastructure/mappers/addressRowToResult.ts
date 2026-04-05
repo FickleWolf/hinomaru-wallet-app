@@ -1,4 +1,4 @@
-import type { AddressesResult } from "@/application/ports/IAddressesRepository";
+import type { AddressesResult } from "@/application/ports/AddressesRepository";
 import type { AddressRow } from "@/infrastructure/db/schema";
 
 export const addressRowToResult = (dbModel: AddressRow): AddressesResult => {

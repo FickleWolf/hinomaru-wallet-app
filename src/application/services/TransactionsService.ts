@@ -8,18 +8,18 @@ import { CustomError } from "@/shared/exceptions";
 import { localTransactionToDomain, remoteToLocalTransaction } from "../mappers/transaction";
 
 import type {
-  ILocalTransactionsRepository,
+  LocalTransactionsRepository,
   LocalTransactionProgress,
   SearchLocalTransactionQuery
-} from "../ports/ILocalTransactionsRepository";
-import type { IRemoteTransactionsGateway, SearchRemoteTransactionsQuery } from "../ports/IRemoteTransactionsGateway";
+} from "../ports/LocalTransactionsRepository";
+import type { RemoteTransactionsGateway, SearchRemoteTransactionsQuery } from "../ports/RemoteTransactionsGateway";
 
 export const TransactionsService = {
   // TODO: Moralisに完全移行したらリモートから最新のデータを取得する
   async getLastTransaction(
     chain: Chain,
     command: GetLastTransactionCommand,
-    localTransactionsRepository: ILocalTransactionsRepository
+    localTransactionsRepository: LocalTransactionsRepository
   ): Promise<TransactionModel | null> {
     const { wallet } = command;
 
@@ -50,8 +50,8 @@ export const TransactionsService = {
   async listMonthlyTransactionsService(
     chain: Chain,
     command: ListMonthlyTransactionsCommand,
-    remoteTransactionsGateway: IRemoteTransactionsGateway,
-    localTransactionsRepository: ILocalTransactionsRepository
+    remoteTransactionsGateway: RemoteTransactionsGateway,
+    localTransactionsRepository: LocalTransactionsRepository
   ): Promise<TransactionModel[]> {
     const { wallet, token, year, month } = command;
 
@@ -82,7 +82,7 @@ export const TransactionsService = {
         };
 
         const remoteTransactions = await remoteTransactionsGateway.search(remoteQuery);
-        const remoteToLocalTransactions = remoteTransactions.items.map(item =>
+        const remoteToLocalTransactions = remoteTransactions.data.map(item =>
           remoteToLocalTransaction(chain, wallet, item)
         );
 

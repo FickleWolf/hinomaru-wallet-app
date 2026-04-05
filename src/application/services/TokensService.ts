@@ -1,4 +1,4 @@
-import type { CreateQuoteQuery, IQuotesGateway } from "@/application/ports/IQuotesGateway";
+import type { CreateQuoteQuery, QuotesGateway } from "@/application/ports/QuotesGateway";
 import { CHAINS, type Chain } from "@/config/chain";
 import { VIEM_PUBLIC_CLIENTS } from "@/config/viem";
 import type { GetTokenBalanceCommand, TransferTokenCommand } from "@/domain/token";
@@ -8,7 +8,7 @@ import { ApiError, CustomError } from "@/shared/exceptions";
 import { erc20TransferCall, hashExecutionIntent } from "@/shared/helpers/evm";
 import { toDisplyValueStr, toMinUnits } from "@/shared/helpers/tokenUnits";
 
-import type { ITokensGateway, TransferTokenQuery } from "../ports/ITokensGateway";
+import type { TokensGateway, TransferTokenQuery } from "../ports/TokensGateway";
 import type { Hex } from "viem";
 
 export const TokensService = {
@@ -32,8 +32,8 @@ export const TokensService = {
   async transferToken(
     chain: Chain,
     command: TransferTokenCommand,
-    quotesGateway: IQuotesGateway,
-    tokenGateway: ITokensGateway
+    quotesGateway: QuotesGateway,
+    tokenGateway: TokensGateway
   ): Promise<Hex> {
     const { account, client, token, feeToken, recipient, amountDisplayValue, webhookUrl } = command;
 

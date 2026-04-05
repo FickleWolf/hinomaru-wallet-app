@@ -1,14 +1,14 @@
 import { useSQLiteContext } from "expo-sqlite";
 import { useEffect, useMemo, useState } from "react";
 
-import type { IAddressesRepository } from "@/application/ports/IAddressesRepository";
-import type { ILocalTransactionsRepository } from "@/application/ports/ILocalTransactionsRepository";
-import type { IPrivateKeyRepository } from "@/application/ports/IPrivateKeyRepository";
-import type { IQuotesGateway } from "@/application/ports/IQuotesGateway";
-import type { IRemoteTransactionsGateway } from "@/application/ports/IRemoteTransactionsGateway";
-import type { ITokensGateway } from "@/application/ports/ITokensGateway";
-import type { IUserSettingRepository } from "@/application/ports/IUserSettingRepository";
-import type { IWalletMetaGateway } from "@/application/ports/IWalletMetaGateway";
+import type { AddressesRepository } from "@/application/ports/AddressesRepository";
+import type { LocalTransactionsRepository } from "@/application/ports/LocalTransactionsRepository";
+import type { PrivateKeyRepository } from "@/application/ports/PrivateKeyRepository";
+import type { QuotesGateway } from "@/application/ports/QuotesGateway";
+import type { RemoteTransactionsGateway } from "@/application/ports/RemoteTransactionsGateway";
+import type { TokensGateway } from "@/application/ports/TokensGateway";
+import type { UserSettingRepository } from "@/application/ports/UserSettingRepository";
+import type { WalletMetaGateway } from "@/application/ports/WalletMetaGateway";
 import { ENV } from "@/config/env";
 import { HttpClient } from "@/infrastructure/clients/HttpClient";
 import { HttpQuotesGateway } from "@/infrastructure/http/HttpQuotesGateway";
@@ -21,19 +21,19 @@ import { SqlLocalTransactionsRepository } from "@/infrastructure/sql/SqlLocalTra
 import { SqlUserSettingRepository } from "@/infrastructure/sql/SqlUserSettingRepository";
 
 export type UseInfrastructureRepositoriesResult = {
-  addressesRepository: IAddressesRepository;
-  transactionsRepository: ILocalTransactionsRepository;
-  userSettingRepository: IUserSettingRepository;
-  quotesGateway: IQuotesGateway;
-  transactionsGateway: IRemoteTransactionsGateway;
-  tokensGateway: ITokensGateway;
-  walletMetaGateway: IWalletMetaGateway;
-  privateKeyRepository: IPrivateKeyRepository | null | undefined;
+  addressesRepository: AddressesRepository;
+  transactionsRepository: LocalTransactionsRepository;
+  userSettingRepository: UserSettingRepository;
+  quotesGateway: QuotesGateway;
+  transactionsGateway: RemoteTransactionsGateway;
+  tokensGateway: TokensGateway;
+  walletMetaGateway: WalletMetaGateway;
+  privateKeyRepository: PrivateKeyRepository | null | undefined;
 };
 
 export const useInfrastructureRepositories = (appCheckToken: string): UseInfrastructureRepositoriesResult => {
   const db = useSQLiteContext();
-  const [privateKeyRepository, setPrivateKeyRepository] = useState<IPrivateKeyRepository | null | undefined>(undefined);
+  const [privateKeyRepository, setPrivateKeyRepository] = useState<PrivateKeyRepository | null | undefined>(undefined);
 
   const addressesRepository = useMemo(() => new SqlAddressesRepository(db), [db]);
   const transactionsRepository = useMemo(() => new SqlLocalTransactionsRepository(db), [db]);

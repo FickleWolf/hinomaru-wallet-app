@@ -12,7 +12,7 @@ export type WalletConnectRequestBase = {
   topic: string;
 };
 
-export interface IWalletConnectHandlers {
+export interface WalletConnectHandlers {
   // ====== Session proposal ======
   onSessionProposal: (proposal: SignClientTypes.EventArguments["session_proposal"]) => Promise<"approve" | "reject">;
 

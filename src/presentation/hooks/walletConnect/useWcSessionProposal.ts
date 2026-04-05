@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 
-import type { IWalletConnectHandlers, SessionProposalDecision } from "@/application/ports/IWalletConnectHandlers";
+import type { WalletConnectHandlers, SessionProposalDecision } from "@/application/ports/WalletConnectHandlers";
 
 import type { SignClientTypes } from "@walletconnect/types";
 
@@ -12,7 +12,7 @@ export type PendingSessionProposal = {
 export const useWcSessionProposal = () => {
   const [pendingProposal, setPendingProposal] = useState<PendingSessionProposal | null>(null);
 
-  const onSessionProposal = useCallback<IWalletConnectHandlers["onSessionProposal"]>(async proposal => {
+  const onSessionProposal = useCallback<WalletConnectHandlers["onSessionProposal"]>(async proposal => {
     return await new Promise<SessionProposalDecision>(resolve => {
       setPendingProposal({ proposal, resolve });
     });

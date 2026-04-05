@@ -5,8 +5,8 @@ import type { CreateQuoteResultSchema } from "@/shared/validations/schemas/HttpQ
 import type * as v from "valibot";
 import type { Address } from "viem";
 
-export interface IQuotesGateway {
-  create(query: CreateQuoteQuery): Promise<CreateQuoteResult>;
+export interface QuotesGateway {
+  create(query: CreateQuoteQuery): Promise<CreateQuoteResult["data"]>;
 }
 
 export type CreateQuoteResult = v.InferOutput<typeof CreateQuoteResultSchema>;

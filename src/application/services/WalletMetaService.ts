@@ -4,10 +4,10 @@ import type { Token } from "@/registries/ChainTokenRegistry";
 import { isChain, isToken } from "@/registries/ChainTokenRegistry";
 import { CustomError } from "@/shared/exceptions";
 
-import type { GetWalletSummaryResult, IWalletMetaGateway } from "../ports/IWalletMetaGateway";
+import type { GetWalletSummaryResult, WalletMetaGateway } from "../ports/WalletMetaGateway";
 
 export const WalletMetaService = {
-  async getSummary(walletMetaGateway: IWalletMetaGateway): Promise<ShackwApiMetaModel> {
+  async getSummary(walletMetaGateway: WalletMetaGateway): Promise<ShackwApiMetaModel> {
     try {
       const meta = await walletMetaGateway.get();
       return buildWalletMetaModel(meta);
@@ -23,7 +23,7 @@ export const WalletMetaService = {
   }
 };
 
-function buildWalletMetaModel(meta: GetWalletSummaryResult): ShackwApiMetaModel {
+function buildWalletMetaModel(meta: GetWalletSummaryResult["data"]): ShackwApiMetaModel {
   const result = createInitialWalletMeta();
 
   const ensureTokenMeta = (chain: Chain, token: Token): WalletMetaItem => {
@@ -41,23 +41,23 @@ function buildWalletMetaModel(meta: GetWalletSummaryResult): ShackwApiMetaModel 
 
   // minTransfers -> minTransfer
   for (const entry of meta.minTransfers) {
-    if (!isChain(entry.chainSymbol)) continue;
+    if (!isChain(entry.chainKey)) continue;
     if (!isToken(entry.tokenSymbol)) continue;
 
-    const tokenMeta = ensureTokenMeta(entry.chainSymbol, entry.tokenSymbol);
+    const tokenMeta = ensureTokenMeta(entry.chainKey, entry.tokenSymbol);
 
     tokenMeta.minTransfer = {
-      minUnits: BigInt(entry.minUnits),
-      display: entry.display
+      minUnits: BigInt(entry.minTransferAmountDisplay),
+      display: entry.minTransferAmountDisplay
     };
   }
 
   // fixedFees -> fixedFee
   for (const entry of meta.fixedFees) {
-    if (!isChain(entry.chainSymbol)) continue;
+    if (!isChain(entry.chainKey)) continue;
     if (!isToken(entry.tokenSymbol)) continue;
 
-    const tokenMeta = ensureTokenMeta(entry.chainSymbol, entry.tokenSymbol);
+    const tokenMeta = ensureTokenMeta(entry.chainKey, entry.tokenSymbol);
 
     tokenMeta.fixedFee = {
       minUnits: BigInt(entry.fixedFeeAmountUnits),

@@ -3,7 +3,6 @@ import * as v from "valibot";
 import type { Token } from "@/registries/ChainTokenRegistry";
 import { TOKEN_REGISTRY } from "@/registries/ChainTokenRegistry";
 import { feeTokenFormValidator } from "@/shared/validations/forms/tokenFormValidator";
-import { urlFormValidator } from "@/shared/validations/forms/urlFormValidator";
 
 export type ReceiveFormValues = v.InferInput<ReturnType<typeof buildReceiveSchema>>;
 
@@ -21,8 +20,7 @@ const buildReceiveSchema = (sendToken: Token, minTransfer: number) => {
       v.transform(s => Number(s)),
       v.number("金額は数値で入力してください。"),
       v.minValue(minTransfer, `最低請求可能額は ${minTransfer} ${sendToken} です。`)
-    ),
-    webhookUrl: v.optional(urlFormValidator)
+    )
   });
 };
 

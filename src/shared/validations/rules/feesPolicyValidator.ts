@@ -6,7 +6,7 @@ export const feesPolicyValidator = v.object(
   {
     method: v.string("policy.method must be a string."),
     version: v.string("policy.version must be a string."),
-    chain: v.picklist(CHAIN_KEYS, `policy.chain must be one of ${CHAIN_KEYS.join(", ")}`)
+    chainKey: v.picklist(CHAIN_KEYS, `policy.chain must be one of ${CHAIN_KEYS.join(", ")}`)
   },
   issue => `${String(issue.expected)} is required`
 );

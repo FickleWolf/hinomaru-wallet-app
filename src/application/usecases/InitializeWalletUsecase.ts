@@ -2,15 +2,15 @@ import type { PrivateKeyModel } from "@/domain/privateKey";
 
 import { privateKeyResultToDomain } from "../mappers/privateKey";
 
-import type { IAddressesRepository } from "../ports/IAddressesRepository";
-import type { IPrivateKeyRepository, PrivateKeyResult } from "../ports/IPrivateKeyRepository";
-import type { IUserSettingRepository } from "../ports/IUserSettingRepository";
+import type { AddressesRepository } from "../ports/AddressesRepository";
+import type { PrivateKeyRepository, PrivateKeyResult } from "../ports/PrivateKeyRepository";
+import type { UserSettingRepository } from "../ports/UserSettingRepository";
 
 export const InitializeWalletUsecase = {
   async execute(
-    addressesRepository: IAddressesRepository,
-    userSettingRepository: IUserSettingRepository,
-    privateKeyRepository: IPrivateKeyRepository
+    addressesRepository: AddressesRepository,
+    userSettingRepository: UserSettingRepository,
+    privateKeyRepository: PrivateKeyRepository
   ): Promise<PrivateKeyModel | null> {
     try {
       // Fetch all persisted states in parallel

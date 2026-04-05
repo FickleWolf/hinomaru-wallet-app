@@ -82,7 +82,6 @@ The app supports receiving payments by generating requests that may include:
 - recipient address
 - token and amount
 - optional fee token selection (if applicable)
-- optional webhook URL (for receiver-side notifications)
 
 Requests can be rendered as QR codes or shared as structured payloads.
 
@@ -101,7 +100,6 @@ High-level flow:
 
 The app remains fully non-custodial throughout the entire process.
 Direct EOA transaction submission is intentionally unsupported; all transfers require EIP-7702 authorization and relay execution.
-
 
 ---
 
@@ -158,7 +156,6 @@ This repository does **not** contain:
 - Firebase (minimal usage, e.g. App Check)
 
 ## 6.2 Commands
-
 ```bash
 # install dependencies
 yarn install
@@ -176,7 +173,6 @@ yarn check
 ---
 
 # 7. Repository Structure
-
 ```bash
 src/
 ├── domain          # Domain models & value objects

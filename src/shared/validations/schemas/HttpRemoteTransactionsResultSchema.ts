@@ -27,8 +27,8 @@ const SearchRemoteTransactionItemSchema = v.object(
 
 export const SearchRemoteTransactionsResultSchema = v.object(
   {
-    items: v.array(SearchRemoteTransactionItemSchema, "items must be an array"),
-    count: v.number("count must be a number")
+    data: v.array(SearchRemoteTransactionItemSchema, "items must be an array"),
+    meta: v.object({ count: v.number("count must be a number") })
   },
   issue => `${String(issue.expected)} is required`
 );

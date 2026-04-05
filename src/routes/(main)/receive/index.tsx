@@ -12,7 +12,6 @@ import ReceiveAmount from "./_components/ReceiveAmount";
 import ReceiveFeeToken from "./_components/ReceiveFeeToken";
 import ReceiveSendToken from "./_components/ReceiveSendToken";
 import ReceiveSubmitButton from "./_components/ReceiveSubmitButton";
-import ReceiveWebhookUrl from "./_components/ReceiveWebhookUrl";
 import { ReceiveFormProvider } from "./_hooks/useReceiveForm";
 
 const ReceiveScreen = () => {
@@ -31,7 +30,6 @@ const ReceiveScreen = () => {
             <VStack className="gap-y-8">
               <ReceiveFeeToken />
               <ReceiveAmount />
-              <ReceiveWebhookUrl />
             </VStack>
             <ReceiveSubmitButton recipient={account.address} />
           </VStack>

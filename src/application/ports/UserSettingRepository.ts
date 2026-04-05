@@ -2,7 +2,7 @@ import type { Chain } from "@/config/chain";
 
 import type { Address } from "viem";
 
-export interface IUserSettingRepository {
+export interface UserSettingRepository {
   get(): Promise<UserSettingResult | null>;
   patch(query: PatchUserSettingQuery): Promise<void>;
 }
