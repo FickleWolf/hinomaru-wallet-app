@@ -21,7 +21,7 @@ const AppIndex = () => {
 
   if (isLoading) return null;
 
-  if (!hasWallet) return <Redirect href="/(onbording)" />;
+  if (!hasWallet) return <Redirect href="/(onboarding)" />;
 
   const search = normalizeParams(params);
   return <Redirect href={{ pathname: "/(main)/(tabs)", ...(walletEnabled ? { params: search } : {}) }} />;
