@@ -8,7 +8,7 @@ import type { TextInput as RNTextInput } from "react-native";
 
 export type AddressRow = Pick<AddressModel, "address" | "name" | "isMine">;
 
-export const useAddressesRow = () => {
+const useAddressesRow = () => {
   const { account } = useShackwWalletContext();
   const { data: addresses, ...rest } = useListAddresses();
 
@@ -65,3 +65,5 @@ export const useAddressesRow = () => {
     ...rest
   };
 };
+
+export default useAddressesRow;

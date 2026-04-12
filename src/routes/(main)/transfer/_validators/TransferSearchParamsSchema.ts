@@ -4,7 +4,6 @@ import type { Chain } from "@/config/chain";
 import { addressFormValidator } from "@/shared/validations/forms/addressFormValidator";
 import { chainValidator } from "@/shared/validations/forms/chainValidator";
 import { feeTokenFormValidator, sendTokenFormValidator } from "@/shared/validations/forms/tokenFormValidator";
-import { urlFormValidator } from "@/shared/validations/forms/urlFormValidator";
 
 export type TransferSearchParams = v.InferInput<typeof TransferSearchParamsSchema>;
 
@@ -13,7 +12,6 @@ export type ParsedTransferSearchParams = {
   feeToken: string;
   amount: string;
   recipient: string;
-  webhookUrl: string | undefined;
 };
 
 const TransferSearchParamsSchema = v.object({
@@ -27,8 +25,7 @@ const TransferSearchParamsSchema = v.object({
       v.nonEmpty("金額を入力してください。"),
       v.regex(/^\d+(?:\.\d+)?$/, "金額は半角数字（小数可）で入力してください。")
     )
-  ),
-  webhookUrl: v.optional(urlFormValidator)
+  )
 });
 
 export default TransferSearchParamsSchema;

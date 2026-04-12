@@ -5,7 +5,7 @@ import { useUpdateAddress } from "@/presentation/hooks/mutations/useUpdateAddres
 
 import AddressesMineEditForm from "./AddressesMineEditForm";
 
-import type { useAddressesRow } from "@mainh/useAddressesRow";
+import type useAddressesRow from "@mainh/useAddressesRow";
 import type { Address } from "viem";
 
 type AddressesMineEditFieldProps = {

@@ -18,56 +18,55 @@ export type RequestOptions = {
 };
 
 export class HttpClient {
-  private baseURL?: string;
-  private defaultHeaders: Record<string, string>;
-  private defaultTimeoutMs?: number;
-  private fetchImpl: typeof fetch;
+  private readonly baseURL: string;
+  private readonly defaultHeaders: Record<string, string>;
+  private readonly defaultTimeoutMs: number | undefined;
+  private readonly fetchImpl: typeof fetch;
 
   constructor(cfg: HttpClientConfig = {}) {
-    this.baseURL = cfg.baseURL;
+    this.baseURL = cfg.baseURL ?? "";
     this.defaultHeaders = cfg.headers ?? {};
     this.defaultTimeoutMs = cfg.timeoutMs;
     this.fetchImpl = cfg.fetchImpl ?? fetch;
   }
 
-  // ---------- internal helpers ----------
+  // ---------- helpers ----------
 
-  private withQuery(path: string, query?: RequestOptions["query"]) {
-    if (!query) return path;
-    const usp = new URLSearchParams();
+  private resolveURL(path: string, query?: RequestOptions["query"]): string {
+    const url = path.startsWith("http://") || path.startsWith("https://") ? path : `${this.baseURL}${path}`;
 
+    if (!query) return url;
+
+    const params = new URLSearchParams();
     for (const [k, v] of Object.entries(query)) {
-      if (v !== undefined && v !== null) usp.set(k, String(v));
+      if (v !== undefined && v !== null) params.set(k, String(v));
     }
 
-    return path + (path.includes("?") ? "&" : "?") + usp.toString();
+    return `${url}${url.includes("?") ? "&" : "?"}${params}`;
   }
 
-  private resolveURL(path: string, query?: RequestOptions["query"]) {
-    const abs = path.startsWith("http://") || path.startsWith("https://") ? path : `${this.baseURL ?? ""}${path}`;
-
-    return this.withQuery(abs, query);
-  }
-
-  private buildSignal(base?: AbortSignal, timeoutMs?: number) {
+  private createAbortSignal(
+    base: AbortSignal | undefined,
+    timeoutMs: number | undefined
+  ): { signal: AbortSignal | undefined; cleanup: () => void } {
     if (!timeoutMs) return { signal: base, cleanup: () => {} };
 
     const controller = new AbortController();
-    const t = setTimeout(() => controller.abort(), timeoutMs);
-
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
     const onAbort = () => controller.abort();
+
     base?.addEventListener("abort", onAbort, { once: true });
 
     return {
       signal: controller.signal,
       cleanup: () => {
-        clearTimeout(t);
+        clearTimeout(timer);
         base?.removeEventListener("abort", onAbort);
       }
     };
   }
 
-  private async parseResponse(res: Response): Promise<any> {
+  private async parseBody(res: Response): Promise<unknown> {
     const ct = res.headers.get("content-type")?.toLowerCase() ?? "";
 
     try {
@@ -75,27 +74,26 @@ export class HttpClient {
       if (ct.startsWith("text/")) return await res.text();
       return await res.arrayBuffer();
     } catch {
-      try {
-        return await res.text();
-      } catch {
-        return undefined;
-      }
+      return res.text().catch(() => undefined);
     }
+  }
+
+  private buildHeaders(opts: RequestOptions): Record<string, string> {
+    return {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      ...this.defaultHeaders,
+      ...opts.headers,
+      ...(opts.idempotencyKey ? { "Idempotency-Key": opts.idempotencyKey } : {})
+    };
   }
 
   // ---------- main request ----------
 
-  private async request(method: HttpMethod, path: string, body?: any, opts: RequestOptions = {}): Promise<any> {
+  private async request<T>(method: HttpMethod, path: string, body: unknown, opts: RequestOptions): Promise<T> {
     const url = this.resolveURL(path, opts.query);
-    const headers: Record<string, string> = {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      ...this.defaultHeaders,
-      ...opts.headers
-    };
-    if (opts.idempotencyKey) headers["Idempotency-Key"] = opts.idempotencyKey;
-
-    const { signal, cleanup } = this.buildSignal(opts.signal, opts.timeoutMs ?? this.defaultTimeoutMs);
+    const headers = this.buildHeaders(opts);
+    const { signal, cleanup } = this.createAbortSignal(opts.signal, opts.timeoutMs ?? this.defaultTimeoutMs);
 
     try {
       const res = await this.fetchImpl(url, {
@@ -108,7 +106,7 @@ export class HttpClient {
             : undefined
       });
 
-      const data = await this.parseResponse(res);
+      const data = await this.parseBody(res);
 
       if (!res.ok) {
         throw new ApiError({
@@ -124,15 +122,18 @@ export class HttpClient {
             undefined
         });
       }
-      return data;
-    } catch (e: any) {
-      const aborted = e?.name === "AbortError";
+
+      return data as T;
+    } catch (e) {
+      if (e instanceof ApiError) throw e;
+
+      const isAbort = e instanceof Error && e.name === "AbortError";
       throw new ApiError({
-        message: aborted ? "Request aborted/timeout" : "Network error",
+        message: isAbort ? "Request aborted / timeout" : "Network error",
         status: 0,
         method,
         url,
-        body: { cause: e?.message ?? String(e) }
+        body: { cause: e instanceof Error ? e.message : String(e) }
       });
     } finally {
       cleanup();
@@ -141,19 +142,23 @@ export class HttpClient {
 
   // ---------- public API ----------
 
-  get(path: string, opts?: RequestOptions) {
-    return this.request("GET", path, undefined, opts);
+  get<T = unknown>(path: string, opts: RequestOptions = {}): Promise<T> {
+    return this.request<T>("GET", path, undefined, opts);
   }
-  post(path: string, body?: any, opts?: RequestOptions) {
-    return this.request("POST", path, body, opts);
+
+  post<T = unknown>(path: string, body?: unknown, opts: RequestOptions = {}): Promise<T> {
+    return this.request<T>("POST", path, body, opts);
   }
-  put(path: string, body?: any, opts?: RequestOptions) {
-    return this.request("PUT", path, body, opts);
+
+  put<T = unknown>(path: string, body?: unknown, opts: RequestOptions = {}): Promise<T> {
+    return this.request<T>("PUT", path, body, opts);
   }
-  patch(path: string, body?: any, opts?: RequestOptions) {
-    return this.request("PATCH", path, body, opts);
+
+  patch<T = unknown>(path: string, body?: unknown, opts: RequestOptions = {}): Promise<T> {
+    return this.request<T>("PATCH", path, body, opts);
   }
-  delete(path: string, opts?: RequestOptions) {
-    return this.request("DELETE", path, undefined, opts);
+
+  delete<T = unknown>(path: string, opts: RequestOptions = {}): Promise<T> {
+    return this.request<T>("DELETE", path, undefined, opts);
   }
 }

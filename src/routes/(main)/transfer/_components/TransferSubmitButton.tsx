@@ -7,7 +7,7 @@ import { useBoolean } from "@/presentation/hooks/useBoolean";
 import { useTw } from "@/presentation/styles/tw";
 import type { Token } from "@/registries/ChainTokenRegistry";
 import { cn } from "@/shared/helpers/cn";
-import { useAddressesRow } from "@mainh/useAddressesRow";
+import useAddressesRow from "@mainh/useAddressesRow";
 
 import useTransferForm from "../_hooks/useTransferForm";
 
@@ -29,7 +29,6 @@ const TransferSubmitButton = () => {
   });
   const feeToken = useStore(form.baseStore, s => s.values.feeToken as Token);
   const recipient = useStore(form.baseStore, s => s.values.recipient as Address);
-  const webhookUrl = useStore(form.baseStore, s => s.values.webhookUrl);
 
   return (
     <>
@@ -59,7 +58,6 @@ const TransferSubmitButton = () => {
         sendToken={sendToken}
         feeToken={feeToken}
         feeDisplyValue={fee?.display ?? 0}
-        webhookUrl={webhookUrl}
         componentProps={{ title: "内容確認", size: "lg", isOpen: isConfirming, onClose: setIsConfirming.off }}
       />
     </>

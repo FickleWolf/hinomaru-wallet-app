@@ -78,7 +78,6 @@ export const TransferFormProvider = ({ children }: PropsWithChildren) => {
     return v === "" ? 0 : Number(v);
   });
   const feeToken = useStore(form.baseStore, s => s.values.feeToken as Token);
-  const webhookUrl = useStore(form.baseStore, s => s.values.webhookUrl);
   const fieldMeta = useStore(form.store, s => s.fieldMeta);
 
   const fee = useMemo(() => meta[currentChain][feeToken]?.fixedFee, [currentChain, feeToken, meta]);
@@ -87,15 +86,13 @@ export const TransferFormProvider = ({ children }: PropsWithChildren) => {
     const amountMeta = fieldMeta.amount;
     const recipientMeta = fieldMeta.recipient;
     const feeTokenMeta = fieldMeta.feeToken;
-    const webhookUrlMeta = fieldMeta.webhookUrl;
 
     const isAmountValid = !!amountMeta?.isValid && !!amountMeta?.isDirty;
     const isRecipientValid = !!recipientMeta?.isValid && !!recipientMeta?.isDirty;
     const isFeeTokenValid = !!feeTokenMeta?.isValid;
-    const isWebhookUrlValid = !webhookUrl?.trim() || !!webhookUrlMeta?.isValid;
 
-    return isAmountValid && isRecipientValid && isFeeTokenValid && isWebhookUrlValid;
-  }, [fieldMeta.amount, fieldMeta.feeToken, fieldMeta.recipient, fieldMeta.webhookUrl, webhookUrl]);
+    return isAmountValid && isRecipientValid && isFeeTokenValid;
+  }, [fieldMeta.amount, fieldMeta.feeToken, fieldMeta.recipient]);
 
   const insuff = useMemo(() => {
     if (!fee) return { insufficient: true };

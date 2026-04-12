@@ -1,3 +1,5 @@
+import { type Hex } from "viem";
+
 import type { CreateQuoteQuery, QuotesGateway } from "@/application/ports/QuotesGateway";
 import { CHAINS, type Chain } from "@/config/chain";
 import { VIEM_PUBLIC_CLIENTS } from "@/config/viem";
@@ -9,7 +11,6 @@ import { erc20TransferCall, hashExecutionIntent } from "@/shared/helpers/evm";
 import { toDisplyValueStr, toMinUnits } from "@/shared/helpers/tokenUnits";
 
 import type { TokensGateway, TransferTokenQuery } from "../ports/TokensGateway";
-import type { Hex } from "viem";
 
 export const TokensService = {
   async getTokenBalance(command: GetTokenBalanceCommand): Promise<string> {
@@ -35,7 +36,7 @@ export const TokensService = {
     quotesGateway: QuotesGateway,
     tokenGateway: TokensGateway
   ): Promise<Hex> {
-    const { account, client, token, feeToken, recipient, amountDisplayValue, webhookUrl } = command;
+    const { account, client, token, feeToken, recipient, amountDisplayValue } = command;
 
     const amountMinUnits = toMinUnits(amountDisplayValue, token);
 
@@ -59,9 +60,10 @@ export const TokensService = {
       // ===== Verification =====
       if (quote.chainId !== CHAINS[chain].id) throw new Error("チェーン情報が一致しません。");
 
-      if (quote.sender !== account.address) throw new Error("送信元アドレスが一致しません。");
+      if (quote.sender.toLowerCase() !== account.address.toLowerCase())
+        throw new Error("送信元アドレスが一致しません。");
 
-      if (quote.recipient !== recipient) throw new Error("送信先アドレスが一致しません。");
+      if (quote.recipient.toLowerCase() !== recipient.toLowerCase()) throw new Error("送信先アドレスが一致しません。");
 
       if (quote.token.address.toLowerCase() !== tokenAddress.toLowerCase())
         throw new Error("送金トークン情報が一致しません。");
@@ -110,16 +112,7 @@ export const TokensService = {
       const transferTokenQuery: TransferTokenQuery = {
         chain,
         quoteToken: quote.quoteToken,
-        authorization,
-        notify: webhookUrl
-          ? {
-              webhook: {
-                id: "wallet:transfer",
-                url: webhookUrl,
-                echo: "mySecretVerificationToken"
-              }
-            }
-          : undefined
+        authorization
       };
 
       const { txHash } = await tokenGateway.transfer(transferTokenQuery);

@@ -14,11 +14,4 @@ export type TransferTokenQuery = {
   chain: Chain;
   quoteToken: string;
   authorization: SignAuthorizationReturnType;
-  notify?: {
-    webhook: {
-      id: string;
-      url: string;
-      echo: string;
-    };
-  };
 };

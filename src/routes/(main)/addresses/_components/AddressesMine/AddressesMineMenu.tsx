@@ -13,7 +13,7 @@ import AddressesDisplayQR from "@mainc/addresses/AddressesDisplayQR";
 
 import AddressesMineEditField from "./AddressesMineEditField";
 
-import type { useAddressesRow } from "@mainh/useAddressesRow";
+import type useAddressesRow from "@mainh/useAddressesRow";
 import type { Address } from "viem";
 
 type AddressesMineMenuProps = {

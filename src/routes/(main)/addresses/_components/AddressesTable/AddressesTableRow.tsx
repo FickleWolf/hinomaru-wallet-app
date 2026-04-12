@@ -8,7 +8,8 @@ import { cn } from "@/shared/helpers/cn";
 
 import AddressesTableRowMenu from "./AddressesTableRowMenu";
 
-import type { AddressRow, useAddressesRow } from "@mainh/useAddressesRow";
+import type useAddressesRow from "@mainh/useAddressesRow";
+import type { AddressRow } from "@mainh/useAddressesRow";
 
 type AddressesTableRowProps = {
   row: AddressRow;

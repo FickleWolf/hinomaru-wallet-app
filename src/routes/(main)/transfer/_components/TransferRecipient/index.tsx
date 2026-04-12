@@ -8,7 +8,7 @@ import { VStack } from "@/presentation/components/gluestack-ui/vstack";
 import { useBoolean } from "@/presentation/hooks/useBoolean";
 import { useTw } from "@/presentation/styles/tw";
 import { cn } from "@/shared/helpers/cn";
-import { useAddressesRow } from "@mainh/useAddressesRow";
+import useAddressesRow from "@mainh/useAddressesRow";
 
 import useTransferForm from "../../_hooks/useTransferForm";
 
