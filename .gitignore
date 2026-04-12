@@ -12,7 +12,6 @@ node_modules/
 .expo-shared/
 web-build/
 dist/
-eas.json
 
 # Expo generated
 expo-env.d.ts
