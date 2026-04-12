@@ -1,9 +1,9 @@
-import type { IUserSettingRepository, UserSettingResult } from "@/application/ports/IUserSettingRepository";
+import type { UserSettingRepository, UserSettingResult } from "@/application/ports/UserSettingRepository";
 import type { UpdateDefaultWalletCommand, UpdateDefaultChainCommand } from "@/domain/userSetting";
 import { CustomError } from "@/shared/exceptions";
 
 export const UserSettingService = {
-  async getUserSetting(userSettingRepository: IUserSettingRepository): Promise<UserSettingResult> {
+  async getUserSetting(userSettingRepository: UserSettingRepository): Promise<UserSettingResult> {
     try {
       const userSetting = await userSettingRepository.get();
       if (!userSetting) throw new CustomError("ユーザの設定情報の取得に失敗しました。");
@@ -20,7 +20,7 @@ export const UserSettingService = {
 
   async updateDefaultChain(
     command: UpdateDefaultChainCommand,
-    userSettingRepository: IUserSettingRepository
+    userSettingRepository: UserSettingRepository
   ): Promise<void> {
     const { defaultChain } = command;
 
@@ -40,7 +40,7 @@ export const UserSettingService = {
 
   async updateDefaultWallet(
     command: UpdateDefaultWalletCommand,
-    userSettingRepository: IUserSettingRepository
+    userSettingRepository: UserSettingRepository
   ): Promise<void> {
     const { defaultWallet } = command;
 

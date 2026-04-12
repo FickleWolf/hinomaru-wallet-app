@@ -5,11 +5,11 @@ import type { SearchRemoteTransactionsResultSchema } from "@/shared/validations/
 import type * as v from "valibot";
 import type { Address } from "viem";
 
-export interface IRemoteTransactionsGateway {
+export interface RemoteTransactionsGateway {
   search(query: SearchRemoteTransactionsQuery): Promise<SearchRemoteTransactionsResult>;
 }
 
-export type SearchRemoteTransactionItem = SearchRemoteTransactionsResult["items"][number];
+export type SearchRemoteTransactionItem = SearchRemoteTransactionsResult["data"][number];
 
 export type SearchRemoteTransactionsResult = v.InferOutput<typeof SearchRemoteTransactionsResultSchema>;
 

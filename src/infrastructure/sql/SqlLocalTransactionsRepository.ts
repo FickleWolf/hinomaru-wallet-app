@@ -1,11 +1,11 @@
 import type {
-  ILocalTransactionsRepository,
+  LocalTransactionsRepository,
   SearchLocalTransactionQuery,
   SearchLocalTransactionsResult,
   LocalTransactionProgress,
   SearchLocalTransactionItem,
   GetTransactionProgressQuery
-} from "@/application/ports/ILocalTransactionsRepository";
+} from "@/application/ports/LocalTransactionsRepository";
 import { chunk, withBusyRetry, execWithRetry } from "@/infrastructure/db/libs";
 import type { TransactionProgressRow, TransactionWithAddressRow } from "@/infrastructure/db/schema";
 import { TOKEN_REGISTRY } from "@/registries/ChainTokenRegistry";
@@ -15,7 +15,7 @@ import { transactionProgressRowToResult, transactionWithAddressRowToResult } fro
 
 import type { SQLiteDatabase } from "expo-sqlite";
 
-export class SqlLocalTransactionsRepository implements ILocalTransactionsRepository {
+export class SqlLocalTransactionsRepository implements LocalTransactionsRepository {
   private db: SQLiteDatabase;
 
   constructor(db: SQLiteDatabase) {

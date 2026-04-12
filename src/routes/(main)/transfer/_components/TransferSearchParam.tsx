@@ -6,7 +6,7 @@ import { ErrorText } from "@/presentation/components/Text";
 import { useLoadingOverlay } from "@/presentation/providers/LoadingOverlayProvider";
 import { useTw } from "@/presentation/styles/tw";
 import { cn } from "@/shared/helpers/cn";
-import { useAddressesRow } from "@mainh/useAddressesRow";
+import useAddressesRow from "@mainh/useAddressesRow";
 
 import useTransferSearchParam from "../_hooks/useTransferSearchParam";
 

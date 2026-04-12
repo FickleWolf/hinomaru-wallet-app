@@ -4,8 +4,8 @@ import type { TransferTokenResultSchema } from "@/shared/validations/schemas/Htt
 import type * as v from "valibot";
 import type { SignAuthorizationReturnType } from "viem";
 
-export interface ITokensGateway {
-  transfer(query: TransferTokenQuery): Promise<TransferTokenResult>;
+export interface TokensGateway {
+  transfer(query: TransferTokenQuery): Promise<TransferTokenResult["data"]>;
 }
 
 export type TransferTokenResult = v.InferOutput<typeof TransferTokenResultSchema>;
@@ -14,11 +14,4 @@ export type TransferTokenQuery = {
   chain: Chain;
   quoteToken: string;
   authorization: SignAuthorizationReturnType;
-  notify?: {
-    webhook: {
-      id: string;
-      url: string;
-      echo: string;
-    };
-  };
 };

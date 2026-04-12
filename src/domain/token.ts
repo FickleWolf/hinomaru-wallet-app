@@ -16,5 +16,4 @@ export type TransferTokenCommand = {
   feeToken: Token;
   recipient: Address;
   amountDisplayValue: number;
-  webhookUrl?: string;
 };

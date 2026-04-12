@@ -1,11 +1,11 @@
 import type { AddressModel, MutateAddressCommand } from "@/domain/address";
 import { CustomError } from "@/shared/exceptions";
 
-import type { IAddressesRepository } from "../ports/IAddressesRepository";
+import type { AddressesRepository } from "../ports/AddressesRepository";
 import type { Address } from "viem";
 
 export const AddressesService = {
-  async listAddress(addressesRepository: IAddressesRepository): Promise<AddressModel[]> {
+  async listAddress(addressesRepository: AddressesRepository): Promise<AddressModel[]> {
     try {
       const addresses = await addressesRepository.list();
       return addresses;
@@ -14,7 +14,7 @@ export const AddressesService = {
     }
   },
 
-  async listMyAddress(addressesRepository: IAddressesRepository): Promise<AddressModel[]> {
+  async listMyAddress(addressesRepository: AddressesRepository): Promise<AddressModel[]> {
     try {
       const addresses = await addressesRepository.listMine();
       return addresses;
@@ -23,7 +23,7 @@ export const AddressesService = {
     }
   },
 
-  async createAddress(addressesRepository: IAddressesRepository, command: MutateAddressCommand): Promise<void> {
+  async createAddress(addressesRepository: AddressesRepository, command: MutateAddressCommand): Promise<void> {
     const { address } = command;
     try {
       const found = await addressesRepository.get(address);
@@ -39,7 +39,7 @@ export const AddressesService = {
     }
   },
 
-  async updateAddress(command: MutateAddressCommand, addressesRepository: IAddressesRepository): Promise<void> {
+  async updateAddress(command: MutateAddressCommand, addressesRepository: AddressesRepository): Promise<void> {
     const { address } = command;
     try {
       const found = await addressesRepository.get(address);
@@ -58,7 +58,7 @@ export const AddressesService = {
     }
   },
 
-  async deleteAddress(addressesRepository: IAddressesRepository, address: Address): Promise<void> {
+  async deleteAddress(addressesRepository: AddressesRepository, address: Address): Promise<void> {
     try {
       const found = await addressesRepository.get(address);
       if (!found) throw new CustomError("指定のアドレスは登録されていません。");

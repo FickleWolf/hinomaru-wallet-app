@@ -1,15 +1,16 @@
-import type { CreateQuoteQuery, IQuotesGateway } from "@/application/ports/IQuotesGateway";
-import type { Chain } from "@/config/chain";
-import { CHAINS } from "@/config/chain";
+import { type Hex } from "viem";
+
+import type { CreateQuoteQuery, QuotesGateway } from "@/application/ports/QuotesGateway";
+import { CHAINS, type Chain } from "@/config/chain";
 import { VIEM_PUBLIC_CLIENTS } from "@/config/viem";
 import type { GetTokenBalanceCommand, TransferTokenCommand } from "@/domain/token";
 import { TOKEN_REGISTRY } from "@/registries/ChainTokenRegistry";
 import type { ShackwApiErrorBody } from "@/shared/exceptions";
 import { ApiError, CustomError } from "@/shared/exceptions";
+import { erc20TransferCall, hashExecutionIntent } from "@/shared/helpers/evm";
 import { toDisplyValueStr, toMinUnits } from "@/shared/helpers/tokenUnits";
 
-import type { ITokensGateway, TransferTokenQuery } from "../ports/ITokensGateway";
-import type { Hex } from "viem";
+import type { TokensGateway, TransferTokenQuery } from "../ports/TokensGateway";
 
 export const TokensService = {
   async getTokenBalance(command: GetTokenBalanceCommand): Promise<string> {
@@ -32,54 +33,89 @@ export const TokensService = {
   async transferToken(
     chain: Chain,
     command: TransferTokenCommand,
-    quotesGateway: IQuotesGateway,
-    tokenGateway: ITokensGateway
+    quotesGateway: QuotesGateway,
+    tokenGateway: TokensGateway
   ): Promise<Hex> {
-    const { account, client, token, feeToken, recipient, amountDisplayValue, webhookUrl } = command;
+    const { account, client, token, feeToken, recipient, amountDisplayValue } = command;
+
+    const amountMinUnits = toMinUnits(amountDisplayValue, token);
 
     const createQuoteQuery: CreateQuoteQuery = {
       chain,
       sender: account.address,
       recipient,
-      token: {
-        symbol: token
-      },
-      feeToken: {
-        symbol: feeToken
-      },
-      amountMinUnits: toMinUnits(amountDisplayValue, token)
+      token: { symbol: token },
+      feeToken: { symbol: feeToken },
+      amountMinUnits
     };
+
     try {
       const publicClient = VIEM_PUBLIC_CLIENTS[chain];
-      const { delegate, quoteToken } = await quotesGateway.create(createQuoteQuery);
+      const quote = await quotesGateway.create(createQuoteQuery);
 
-      const nonce = await publicClient.getTransactionCount({
+      const tokenAddress = TOKEN_REGISTRY[token].contract[chain]?.address;
+      const feeTokenAddress = TOKEN_REGISTRY[feeToken].contract[chain]?.address;
+      if (!tokenAddress || !feeTokenAddress) throw new Error("トークンアドレスの解決に失敗しました。");
+
+      // ===== Verification =====
+      if (quote.chainId !== CHAINS[chain].id) throw new Error("チェーン情報が一致しません。");
+
+      if (quote.sender.toLowerCase() !== account.address.toLowerCase())
+        throw new Error("送信元アドレスが一致しません。");
+
+      if (quote.recipient.toLowerCase() !== recipient.toLowerCase()) throw new Error("送信先アドレスが一致しません。");
+
+      if (quote.token.address.toLowerCase() !== tokenAddress.toLowerCase())
+        throw new Error("送金トークン情報が一致しません。");
+
+      if (quote.feeToken.address.toLowerCase() !== feeTokenAddress.toLowerCase())
+        throw new Error("手数料トークン情報が一致しません。");
+
+      const expiresAtSec = BigInt(Math.floor(new Date(quote.expiresAt).getTime() / 1000));
+
+      const transferAmountCallData = erc20TransferCall({
+        token: tokenAddress,
+        to: recipient,
+        amountMinUnits
+      });
+
+      const transferFeeCallData = erc20TransferCall({
+        token: feeTokenAddress,
+        to: quote.sponsor,
+        amountMinUnits: quote.fee.minUnits
+      });
+
+      const expectedCallHash = hashExecutionIntent({
+        chainId: quote.chainId,
+        sender: account.address,
+        calls: [transferAmountCallData, transferFeeCallData],
+        nonce: quote.nonce,
+        expiresAtSec
+      });
+
+      if (quote.callHash !== expectedCallHash) throw new Error("見積内容の検証に失敗しました。");
+
+      // ===== End verification =====
+
+      const txNonce = await publicClient.getTransactionCount({
         address: account.address,
         blockTag: "pending"
       });
+
       const authorization = await client.signAuthorization({
         account,
-        contractAddress: delegate,
-        chainId: CHAINS[chain].id,
-        nonce
+        contractAddress: quote.delegate,
+        chainId: quote.chainId,
+        nonce: txNonce
       });
 
       const transferTokenQuery: TransferTokenQuery = {
         chain,
-        quoteToken,
-        authorization,
-        notify: webhookUrl
-          ? {
-              webhook: {
-                id: "wallet:transfer",
-                url: webhookUrl,
-                echo: "mySecretVerificationToken"
-              }
-            }
-          : undefined
+        quoteToken: quote.quoteToken,
+        authorization
       };
-      const { txHash } = await tokenGateway.transfer(transferTokenQuery);
 
+      const { txHash } = await tokenGateway.transfer(transferTokenQuery);
       return txHash;
     } catch (error: unknown) {
       console.error(error);
@@ -87,7 +123,7 @@ export const TokensService = {
       let mes = "送金処理中に不明なエラーが発生しました。";
       if (error instanceof ApiError) {
         const body = error.body as ShackwApiErrorBody;
-        const code = body.errors[0].code;
+        const code = body.errors[0]?.code ?? "";
 
         if (code === "BAD_REQUEST") mes = "リクエスト内容が不正です。";
         if (code.includes("INSUFFICIENT")) mes = "残高が不足しています。";

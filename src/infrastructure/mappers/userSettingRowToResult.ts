@@ -1,4 +1,4 @@
-import type { UserSettingResult } from "@/application/ports/IUserSettingRepository";
+import type { UserSettingResult } from "@/application/ports/UserSettingRepository";
 import type { UserSettingWithAddressNameRow } from "@/infrastructure/db/schema";
 
 export const userSettingRowToResult = (dbModel: UserSettingWithAddressNameRow): UserSettingResult => {

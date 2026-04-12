@@ -53,7 +53,6 @@
           "category": ["BROWSABLE", "DEFAULT"]
         }
       ],
-      "edgeToEdgeEnabled": true,
       "adaptiveIcon": {
         "foregroundImage": "./src/presentation/assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -99,7 +98,8 @@
       ],
       "expo-font",
       "expo-secure-store",
-      "./plugins/withNonModularHeadersFix.cjs"
+      "./plugins/withNonModularHeadersFix.cjs",
+      "expo-sharing"
     ],
     "experiments": {
       "typedRoutes": true

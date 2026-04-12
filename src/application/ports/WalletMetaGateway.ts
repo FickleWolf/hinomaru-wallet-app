@@ -2,8 +2,8 @@ import type { WalletApiMetaSchema } from "@/shared/validations/schemas/HttpWalle
 
 import type * as v from "valibot";
 
-export interface IWalletMetaGateway {
-  get(): Promise<GetWalletSummaryResult>;
+export interface WalletMetaGateway {
+  get(): Promise<GetWalletSummaryResult["data"]>;
 }
 
 export type GetWalletSummaryResult = v.InferOutput<typeof WalletApiMetaSchema>;

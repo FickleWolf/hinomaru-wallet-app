@@ -1,6 +1,6 @@
 import { ScrollView } from "react-native";
 
-import type { ShackwSignInParams } from "@/application/ports/IWalletConnectHandlers";
+import type { ShackwSignInParams } from "@/application/ports/WalletConnectHandlers";
 import { AppText } from "@/presentation/components/AppText";
 import { BottomActionSheet } from "@/presentation/components/BottomActionSheet";
 import { SubContainButton, ContainButton } from "@/presentation/components/Button";

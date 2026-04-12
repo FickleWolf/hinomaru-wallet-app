@@ -1,6 +1,6 @@
 import type { Address, Hex } from "viem";
 
-export interface IPrivateKeyRepository {
+export interface PrivateKeyRepository {
   list(): PrivateKeyResult[];
   get(wallet: string): PrivateKeyResult | undefined;
   upsert(entry: PrivateKeyResult): Promise<void>;

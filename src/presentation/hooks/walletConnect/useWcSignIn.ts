@@ -1,10 +1,10 @@
 import { useCallback, useState } from "react";
 
 import type {
-  IWalletConnectHandlers,
+  WalletConnectHandlers,
   ShackwSignInParams,
   ShackwSignInResult
-} from "@/application/ports/IWalletConnectHandlers";
+} from "@/application/ports/WalletConnectHandlers";
 import type { WalletConnectClient } from "@/infrastructure/clients/WalletConnectClient";
 import { useShackwWalletContext } from "@/presentation/providers/ShackwWalletProvider";
 
@@ -21,7 +21,7 @@ export const useWcSignIn = (wcClient: WalletConnectClient | null) => {
   const { account, walletClient } = useShackwWalletContext();
   const [pendingSignIn, setPendingSignIn] = useState<PendingSignIn | null>(null);
 
-  const onSignIn = useCallback<IWalletConnectHandlers["onSignIn"]>(
+  const onSignIn = useCallback<WalletConnectHandlers["onSignIn"]>(
     async params => {
       const peerMeta = wcClient?.getPeerMetadata?.(params.topic);
       return await new Promise<ShackwSignInResult>((resolve, reject) => {

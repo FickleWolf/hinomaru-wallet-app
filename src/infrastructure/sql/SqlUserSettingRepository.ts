@@ -1,15 +1,15 @@
 import type {
-  IUserSettingRepository,
+  UserSettingRepository,
   UserSettingResult,
   PatchUserSettingQuery
-} from "@/application/ports/IUserSettingRepository";
+} from "@/application/ports/UserSettingRepository";
 import type { UserSettingWithAddressNameRow } from "@/infrastructure/db/schema";
 
 import { userSettingRowToResult } from "../mappers/userSettingRowToResult";
 
 import type { SQLiteDatabase } from "expo-sqlite";
 
-export class SqlUserSettingRepository implements IUserSettingRepository {
+export class SqlUserSettingRepository implements UserSettingRepository {
   private db: SQLiteDatabase;
 
   constructor(db: SQLiteDatabase) {

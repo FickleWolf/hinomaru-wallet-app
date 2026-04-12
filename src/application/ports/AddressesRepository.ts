@@ -1,6 +1,6 @@
 import type { Address } from "viem";
 
-export interface IAddressesRepository {
+export interface AddressesRepository {
   get(address: Address): Promise<AddressesResult | null>;
   list(): Promise<AddressesResult[]>;
   listMine(): Promise<AddressesResult[]>;

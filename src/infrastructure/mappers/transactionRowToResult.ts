@@ -1,7 +1,7 @@
 import type {
   LocalTransactionProgress,
   SearchLocalTransactionsResult
-} from "@/application/ports/ILocalTransactionsRepository";
+} from "@/application/ports/LocalTransactionsRepository";
 import type { Chain } from "@/config/chain";
 import type { TransactionProgressRow, TransactionWithAddressRow } from "@/infrastructure/db/schema";
 import { ADDRESS_TO_TOKEN } from "@/registries/ChainTokenRegistry";

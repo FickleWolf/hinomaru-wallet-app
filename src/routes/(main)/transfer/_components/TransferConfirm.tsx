@@ -28,13 +28,12 @@ type TransferConfirmProps = {
   sendToken: Token;
   feeToken: Token;
   feeDisplyValue: number;
-  webhookUrl?: string;
   componentProps: Omit<React.ComponentProps<typeof BottomActionSheet>, "children">;
 };
 
 const TransferConfirm = (props: TransferConfirmProps) => {
   const tw = useTw();
-  const { name, recipient, amount, sendToken, feeToken, feeDisplyValue, webhookUrl, componentProps } = props;
+  const { name, recipient, amount, sendToken, feeToken, feeDisplyValue, componentProps } = props;
 
   const { safeClose } = useSafeCloseToHome();
   const { account, walletClient } = useShackwWalletContext();
@@ -51,10 +50,9 @@ const TransferConfirm = (props: TransferConfirmProps) => {
       token: sendToken,
       feeToken: feeToken as Token,
       amountDisplayValue: Number(amount),
-      recipient: recipient as Address,
-      webhookUrl
+      recipient: recipient as Address
     });
-  }, [account, amount, walletClient, feeToken, mutate, recipient, sendToken, setIsTransferring, webhookUrl]);
+  }, [account, amount, walletClient, feeToken, mutate, recipient, sendToken, setIsTransferring]);
 
   const handleCloseSuccess = useCallback(() => {
     componentProps.onClose();

@@ -3,7 +3,7 @@ import { Core } from "@walletconnect/core";
 import { getSdkError } from "@walletconnect/utils";
 import * as v from "valibot";
 
-import type { IWalletConnectHandlers } from "@/application/ports/IWalletConnectHandlers";
+import type { WalletConnectHandlers } from "@/application/ports/WalletConnectHandlers";
 import { ENV } from "@/config/env";
 import { buildApprovedNamespacesForShackw, WALLETCONNECT_METADATA } from "@/config/walletConnect";
 import { CustomError } from "@/shared/exceptions";
@@ -20,12 +20,12 @@ let singletonPromise: Promise<WalletConnectClient> | null = null;
 
 export class WalletConnectClient {
   private wallet: Address;
-  private handlers: IWalletConnectHandlers;
+  private handlers: WalletConnectHandlers;
 
   private walletKit: IWalletKit;
   private clientId: string;
 
-  private constructor(walletKit: IWalletKit, clientId: string, wallet: Address, handlers: IWalletConnectHandlers) {
+  private constructor(walletKit: IWalletKit, clientId: string, wallet: Address, handlers: WalletConnectHandlers) {
     this.walletKit = walletKit;
     this.clientId = clientId;
     this.wallet = wallet;
@@ -34,7 +34,7 @@ export class WalletConnectClient {
     this.setupListeners();
   }
 
-  static async create(wallet: Address, handlers: IWalletConnectHandlers): Promise<WalletConnectClient> {
+  static async create(wallet: Address, handlers: WalletConnectHandlers): Promise<WalletConnectClient> {
     if (!singletonPromise) {
       singletonPromise = (async () => {
         const core = new Core({ projectId: PROJECT_ID });
@@ -52,7 +52,7 @@ export class WalletConnectClient {
     return inst;
   }
 
-  updateContext(wallet: Address, handlers: IWalletConnectHandlers) {
+  updateContext(wallet: Address, handlers: WalletConnectHandlers) {
     this.wallet = wallet;
     this.handlers = handlers;
   }

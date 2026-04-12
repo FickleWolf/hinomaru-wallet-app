@@ -9,16 +9,16 @@ import { CustomError } from "@/shared/exceptions";
 
 import { privateKeyResultToDomain } from "../mappers/privateKey";
 
-import type { IAddressesRepository } from "../ports/IAddressesRepository";
-import type { IPrivateKeyRepository, PrivateKeyResult } from "../ports/IPrivateKeyRepository";
-import type { IUserSettingRepository } from "../ports/IUserSettingRepository";
+import type { AddressesRepository } from "../ports/AddressesRepository";
+import type { PrivateKeyRepository, PrivateKeyResult } from "../ports/PrivateKeyRepository";
+import type { UserSettingRepository } from "../ports/UserSettingRepository";
 import type { Address, Hex } from "viem";
 
 export const PrivateKeysService = {
   async listPrivateKeys(
     command: ListPrivateKeysCommand,
-    addressesRepository: IAddressesRepository,
-    privateKeyRepository: IPrivateKeyRepository
+    addressesRepository: AddressesRepository,
+    privateKeyRepository: PrivateKeyRepository
   ): Promise<PrivateKeyModel[]> {
     const { isAuthRequired } = command;
 
@@ -46,8 +46,8 @@ export const PrivateKeysService = {
 
   async getPrivateKeyByWallet(
     command: GetPrivateKeyByWalletCommand,
-    addressesRepository: IAddressesRepository,
-    privateKeyRepository: IPrivateKeyRepository
+    addressesRepository: AddressesRepository,
+    privateKeyRepository: PrivateKeyRepository
   ): Promise<PrivateKeyModel> {
     const { wallet, isAuthRequired } = command;
 
@@ -71,9 +71,9 @@ export const PrivateKeysService = {
 
   async storePrivateKey(
     command: StorePrivateKeyCommand,
-    addressesRepository: IAddressesRepository,
-    userSettingRepository: IUserSettingRepository,
-    privateKeyRepository: IPrivateKeyRepository
+    addressesRepository: AddressesRepository,
+    userSettingRepository: UserSettingRepository,
+    privateKeyRepository: PrivateKeyRepository
   ): Promise<void> {
     const { name, wallet, privateKey, enabled } = command;
     try {
@@ -104,7 +104,7 @@ export const PrivateKeysService = {
 
   async enablePrivateKeyByWallet(
     command: EnablePrivateKeyCommand,
-    privateKeyRepository: IPrivateKeyRepository
+    privateKeyRepository: PrivateKeyRepository
   ): Promise<void> {
     const { wallet, segments } = command;
     try {
@@ -135,9 +135,9 @@ export const PrivateKeysService = {
 
   async deletePrivateKeyByWallet(
     wallet: Address,
-    addressesRepository: IAddressesRepository,
-    userSettingRepository: IUserSettingRepository,
-    privateKeyRepository: IPrivateKeyRepository
+    addressesRepository: AddressesRepository,
+    userSettingRepository: UserSettingRepository,
+    privateKeyRepository: PrivateKeyRepository
   ): Promise<void> {
     try {
       const userSetting = await userSettingRepository.get();

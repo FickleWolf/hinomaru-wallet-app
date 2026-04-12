@@ -32,16 +32,14 @@ const useTransferSearchParam = () => {
   });
   const feeToken = useStore(form.baseStore, s => s.values.feeToken as Token);
   const recipient = useStore(form.baseStore, s => s.values.recipient as Address);
-  const webhookUrl = useStore(form.baseStore, s => s.values.webhookUrl);
 
   const applyParsedParams = useCallback(
-    async ({ chain, amount, recipient, feeToken, webhookUrl }: ParsedTransferSearchParams) => {
+    async ({ chain, amount, recipient, feeToken }: ParsedTransferSearchParams) => {
       setCurrentChain(chain);
 
       form.setFieldValue("amount", amount);
       form.setFieldValue("recipient", recipient);
       form.setFieldValue("feeToken", feeToken);
-      form.setFieldValue("webhookUrl", webhookUrl);
 
       await form.validateAllFields("change");
       setIsParsing.off();
@@ -61,7 +59,7 @@ const useTransferSearchParam = () => {
       return;
     }
 
-    const { chain, amount, feeToken, recipient, sendToken, webhookUrl } = parsed.output;
+    const { chain, amount, feeToken, recipient, sendToken } = parsed.output;
 
     if (!(chain && amount && feeToken && recipient && sendToken)) {
       setIsConfirmed.on();
@@ -74,7 +72,7 @@ const useTransferSearchParam = () => {
 
     const id = requestAnimationFrame(() => {
       void (async () => {
-        await applyParsedParams({ chain, amount, feeToken, recipient, webhookUrl });
+        await applyParsedParams({ chain, amount, feeToken, recipient });
         initializedRef.current = true;
       })();
     });
@@ -101,8 +99,7 @@ const useTransferSearchParam = () => {
       sendToken,
       recipient,
       feeToken,
-      feeDisplyValue: fee?.display ?? 0,
-      webhookUrl
+      feeDisplyValue: fee?.display ?? 0
     },
     setIsConfirming,
     setIsError

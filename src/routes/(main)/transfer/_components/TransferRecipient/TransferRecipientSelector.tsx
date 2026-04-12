@@ -12,7 +12,7 @@ import { useTw } from "@/presentation/styles/tw";
 import { cn } from "@/shared/helpers/cn";
 
 import type { TransferFormContextType } from "../../_hooks/useTransferForm";
-import type { useAddressesRow } from "@mainh/useAddressesRow";
+import type useAddressesRow from "@mainh/useAddressesRow";
 import type { Address } from "viem";
 
 type TransferRecipientSelectorProps = Pick<

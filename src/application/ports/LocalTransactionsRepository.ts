@@ -3,7 +3,7 @@ import type { Token } from "@/registries/ChainTokenRegistry";
 
 import type { Address, Hex } from "viem";
 
-export interface ILocalTransactionsRepository {
+export interface LocalTransactionsRepository {
   search(query: SearchLocalTransactionQuery): Promise<SearchLocalTransactionsResult[]>;
   batchWrite(progress: LocalTransactionProgress, items: SearchLocalTransactionItem[]): Promise<void>;
   getProgress(query: GetTransactionProgressQuery): Promise<LocalTransactionProgress | null>;

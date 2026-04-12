@@ -1,25 +1,22 @@
 import * as v from "valibot";
 
 import type {
-  IRemoteTransactionsGateway,
+  RemoteTransactionsGateway,
   SearchRemoteTransactionsQuery,
   SearchRemoteTransactionsResult
-} from "@/application/ports/IRemoteTransactionsGateway";
+} from "@/application/ports/RemoteTransactionsGateway";
 import { SearchRemoteTransactionsResultSchema } from "@/shared/validations/schemas/HttpRemoteTransactionsResultSchema";
 
 import type { HttpClient } from "../clients/HttpClient";
 
-export class HttpRemoteTransactionsGateway implements IRemoteTransactionsGateway {
+export class HttpRemoteTransactionsGateway implements RemoteTransactionsGateway {
   private path = "/transactions";
-  private client: HttpClient;
 
-  constructor(client: HttpClient) {
-    this.client = client;
-  }
+  constructor(private readonly client: HttpClient) {}
 
   async search(query: SearchRemoteTransactionsQuery): Promise<SearchRemoteTransactionsResult> {
-    const searched = await this.client.post(`${this.path}:search`, query);
-    const parsed = v.parse(SearchRemoteTransactionsResultSchema, searched);
+    const res = await this.client.post(`${this.path}:search`, query);
+    const parsed = v.parse(SearchRemoteTransactionsResultSchema, res);
     return parsed;
   }
 }

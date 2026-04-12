@@ -4,8 +4,8 @@ import { ADDRESS_TO_TOKEN, TOKEN_REGISTRY } from "@/registries/ChainTokenRegistr
 import { CustomError } from "@/shared/exceptions";
 import { toDisplyValue } from "@/shared/helpers/tokenUnits";
 
-import type { SearchLocalTransactionItem, SearchLocalTransactionsResult } from "../ports/ILocalTransactionsRepository";
-import type { SearchRemoteTransactionItem } from "../ports/IRemoteTransactionsGateway";
+import type { SearchLocalTransactionItem, SearchLocalTransactionsResult } from "../ports/LocalTransactionsRepository";
+import type { SearchRemoteTransactionItem } from "../ports/RemoteTransactionsGateway";
 import type { Address } from "viem";
 
 export const remoteTransactionToDomain = (item: SearchRemoteTransactionItem): TransactionModel => {

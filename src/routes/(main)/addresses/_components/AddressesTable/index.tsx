@@ -6,7 +6,8 @@ import TableSuspence from "@/presentation/components/TableSuspence";
 
 import AddressesTableRow from "./AddressesTableRow";
 
-import type { AddressRow, useAddressesRow } from "@mainh/useAddressesRow";
+import type useAddressesRow from "@mainh/useAddressesRow";
+import type { AddressRow } from "@mainh/useAddressesRow";
 
 type AddressesTableProps = {
   rows: AddressRow[] | undefined;

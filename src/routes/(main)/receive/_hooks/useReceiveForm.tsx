@@ -21,8 +21,7 @@ const useReceiveFormProvider = (props: useReceiveFormProviderProps) => {
 
   const defaultValues: ReceiveFormValues = {
     feeToken: currentChainDefaultToken,
-    amount: "",
-    webhookUrl: ""
+    amount: ""
   };
 
   return useForm({
@@ -54,7 +53,6 @@ export const ReceiveFormProvider = ({ children }: PropsWithChildren) => {
   const form = useReceiveFormProvider({ sendToken, minTransfer, currentChainDefaultToken });
 
   const feeToken = useStore(form.baseStore, s => s.values.feeToken as Token);
-  const webhookUrl = useStore(form.baseStore, s => s.values.webhookUrl);
   const fieldMeta = useStore(form.store, s => s.fieldMeta);
 
   const fee = useMemo(() => meta[currentChain][feeToken]?.fixedFee, [currentChain, feeToken, meta]);
@@ -62,14 +60,12 @@ export const ReceiveFormProvider = ({ children }: PropsWithChildren) => {
   const isValid = useMemo(() => {
     const amountMeta = fieldMeta.amount;
     const feeTokenMeta = fieldMeta.feeToken;
-    const webhookUrlMeta = fieldMeta.webhookUrl;
 
     const isAmountValid = !!amountMeta?.isTouched && !!amountMeta?.isValid;
     const isFeeTokenValid = !!feeTokenMeta?.isValid;
-    const isWebhookUrlValid = !!webhookUrlMeta?.isValid || !webhookUrl;
 
-    return isAmountValid && isFeeTokenValid && isWebhookUrlValid;
-  }, [fieldMeta.amount, fieldMeta.feeToken, fieldMeta.webhookUrl, webhookUrl]);
+    return isAmountValid && isFeeTokenValid;
+  }, [fieldMeta.amount, fieldMeta.feeToken]);
 
   return (
     <ReceiveFormContext.Provider

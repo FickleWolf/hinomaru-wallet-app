@@ -9,7 +9,7 @@ import { useBoolean } from "@/presentation/hooks/useBoolean";
 import { useTw } from "@/presentation/styles/tw";
 import { cn } from "@/shared/helpers/cn";
 
-import type { useAddressesRow } from "@mainh/useAddressesRow";
+import type useAddressesRow from "@mainh/useAddressesRow";
 import type { Address } from "viem";
 
 type AddressesTableDeleteDialogProps = {

@@ -10,7 +10,7 @@ import TransferRecipientDirectForm from "./TransferRecipientDirectForm";
 import TransferRecipientSelector from "./TransferRecipientSelector";
 
 import type { TransferFormContextType } from "../../_hooks/useTransferForm";
-import type { useAddressesRow } from "@mainh/useAddressesRow";
+import type useAddressesRow from "@mainh/useAddressesRow";
 
 type TransferRecipientFieldProps = {
   prevValue: string;

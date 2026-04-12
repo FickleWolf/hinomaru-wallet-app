@@ -29,7 +29,6 @@ const ReceiveSubmitButton = (props: ReceiveSubmitButtonProps) => {
     return v === "" ? 0 : Number(v);
   });
   const feeToken = useStore(form.baseStore, s => s.values.feeToken as Token);
-  const webhookUrl = useStore(form.baseStore, s => s.values.webhookUrl);
 
   return (
     <>
@@ -51,7 +50,6 @@ const ReceiveSubmitButton = (props: ReceiveSubmitButtonProps) => {
         sendToken={sendToken}
         feeToken={feeToken}
         feeDisplayValue={fee?.display ?? 0}
-        webhookUrl={webhookUrl}
         componentProps={{ title: "請求リンクの共有", size: "lg", isOpen: isSharing, onClose: setIsSharing.off }}
       />
     </>

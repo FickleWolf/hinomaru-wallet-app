@@ -14,7 +14,8 @@ import AddressMutateField from "@mainc/addresses/AddressMutateField";
 
 import AddressesTableDeleteDialog from "./AddressesTableDeleteDialog";
 
-import type { AddressRow, useAddressesRow } from "@mainh/useAddressesRow";
+import type useAddressesRow from "@mainh/useAddressesRow";
+import type { AddressRow } from "@mainh/useAddressesRow";
 
 type AddressesTableRowMenuProps = {
   row: AddressRow;

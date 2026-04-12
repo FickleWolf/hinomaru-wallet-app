@@ -10,7 +10,7 @@ import { cn } from "@/shared/helpers/cn";
 
 import AddressesMineMenu from "./AddressesMineMenu";
 
-import type { useAddressesRow } from "@mainh/useAddressesRow";
+import type useAddressesRow from "@mainh/useAddressesRow";
 
 type AddressesMineProps = Pick<AddressModel, "address" | "name"> & {
   refetchAddresses: ReturnType<typeof useAddressesRow>["refetch"];

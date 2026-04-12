@@ -24,13 +24,12 @@ type ReceiveConfirmProps = {
   sendToken: Token;
   feeToken: Token;
   feeDisplayValue: number;
-  webhookUrl: string | undefined;
   componentProps: Omit<React.ComponentProps<typeof BottomActionSheet>, "children">;
 };
 
 const ReceiveConfirm = (props: ReceiveConfirmProps) => {
   const tw = useTw();
-  const { recipient, amount, sendToken, feeToken, feeDisplayValue, webhookUrl, componentProps } = props;
+  const { recipient, amount, sendToken, feeToken, feeDisplayValue, componentProps } = props;
 
   const { currentChain: chain } = useWalletPreferencesContext();
   const [isShowErrorDialog, setIsShowErrorDialog] = useBoolean(false);
@@ -61,7 +60,7 @@ const ReceiveConfirm = (props: ReceiveConfirmProps) => {
               <QRCode
                 ref={qrCodeRef}
                 path="transfer"
-                query={{ chain, sendToken, feeToken, recipient, amount, webhookUrl }}
+                query={{ chain, sendToken, feeToken, recipient, amount }}
                 size={tw.scaleNum(275)}
               />
             </VStack>
