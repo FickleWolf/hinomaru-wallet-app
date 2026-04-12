@@ -21,7 +21,7 @@ const OnBording = () => {
       </HStack>
 
       <Box className="w-full aspect-[1]">
-        <Image size="full" source={require("@/presentation/assets/images/onbording.png")} alt="image" />
+        <Image size="full" source={require("@/presentation/assets/images/onboarding.png")} alt="image" />
       </Box>
 
       <OnBordingActions />
