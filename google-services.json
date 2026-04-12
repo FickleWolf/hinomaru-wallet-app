@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "690366133192",
+    "project_id": "shackw-wallet",
+    "storage_bucket": "shackw-wallet.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:690366133192:android:5e83b1bdcd28973f0d46fd",
+        "android_client_info": {
+          "package_name": "com.shackw.wallet"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBN1Cx_zVFJkrkWpCe1m87cFCSN2Wj-U24"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -30,10 +30,6 @@ npm-debug.*
 credentials.json
 secret.txt
 
-# Firebase
-GoogleService-Info.plist
-google-services.json
-
 # Android / iOS native projects
 android/
 ios/
