@@ -4,6 +4,7 @@
   "description": "Shackw Wallet — non-custodial stablecoin wallet with gasless transfers via EIP-7702.",
   "author": "Shackw",
   "main": "./src/index.ts",
+  "license": "MIT",
   "scripts": {
     "lint": "expo lint --fix && tsc --noEmit",
     "format": "npx prettier --write '**/*.{js,ts,tsx}'",
